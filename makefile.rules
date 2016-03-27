@@ -1,0 +1,22 @@
+TEST_TOOL_ROOTS := branch_predictor
+TEST_ROOTS :=
+SANITY_SUBSET :=
+TOOL_ROOTS :=
+SA_TOOL_ROOTS :=
+APP_ROOTS :=
+OBJECT_ROOTS :=
+DLL_ROOTS :=
+LIB_ROOTS :=
+
+TOOL_CXXFLAGS += -std=c++11 -I.
+TOOL_OBJECTS = \
+	$(OBJDIR)main$(OBJ_SUFFIX) \
+	$(OBJDIR)predictors/predictor$(OBJ_SUFFIX) \
+	$(OBJDIR)predictors/two_bit_saturating_counter_predictor$(OBJ_SUFFIX) \
+	$(OBJDIR)predictors/perceptron_predictor$(OBJ_SUFFIX)
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)predictors
+
+$(OBJDIR)branch_predictor$(PINTOOL_SUFFIX): $(TOOL_OBJECTS)
+	$(LINKER) $(TOOL_LDFLAGS) $(LINK_EXE)$@ $(TOOL_OBJECTS) $(TOOL_LPATHS) $(TOOL_LIBS)
