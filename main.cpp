@@ -64,6 +64,7 @@ int main(int argc, char *argv[]) {
   *out << "Running with the following branch predictor(s):" << endl;
   for (bp::Predictor *bp : bps) {
     *out << "  " << bp->get_name() << endl;
+    // delete bp;  // Due to the way Pin manages memory, this causes a crash.
   }
   *out << endl;
 
