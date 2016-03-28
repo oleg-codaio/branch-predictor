@@ -11,9 +11,10 @@
 
 namespace bp {
 
+// Abstract class that provides a high-level interface for branch prediction.
 class Predictor {
  public:
-  virtual ~Predictor() { };
+  virtual ~Predictor() {}
   // Gets the prediction for whether the branch at address pc is expected to be
   // taken. Furthermore, updates the underlying branch predictor model with
   // whether the branch was actually taken (br_taken) and its instruction
@@ -28,6 +29,8 @@ class Predictor {
   virtual string get_name() const = 0;
 };
 
+// Templated branch predictor base class that should be inherited by branch
+// predictor implementations.
 template <typename T>
 class PredictorImpl : public Predictor {
   // Contains the addresses of the top two mispredicted branches.

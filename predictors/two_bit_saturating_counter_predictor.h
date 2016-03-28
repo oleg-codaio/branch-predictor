@@ -15,6 +15,8 @@ namespace bp {
 enum TwoBitState {STRONGLY_NOT_TAKEN, WEAKLY_NOT_TAKEN, WEAKLY_TAKEN,
     STRONGLY_TAKEN};
 
+// Simple branch predictor that uses the TwoBitState FSM to train predictions
+// for addresses that hash to a given entry.
 class TwoBitSaturatingCounterPredictor : public PredictorImpl<TwoBitState> {
   // The number of entries in this predictor.
   static const int kSize = 1024;
