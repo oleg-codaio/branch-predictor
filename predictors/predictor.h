@@ -13,6 +13,7 @@ namespace bp {
 
 class Predictor {
  public:
+  virtual ~Predictor() { };
   virtual bool GetPredictionAndUpdate(ADDRINT pc, bool br_taken,
                                       string *mnemonic) = 0;
   virtual void PrintStatistics(std::ostream *out) const = 0;
