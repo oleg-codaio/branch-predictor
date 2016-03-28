@@ -12,9 +12,9 @@ namespace bp {
 template <typename T>
 bool PredictorImpl<T>::GetPredictionAndUpdate(
     ADDRINT pc, bool br_taken, string *mnemonic) {
-  int key = getKey(pc);
+  int key = get_key(pc);
   T pred = GetPrediction(key);
-  bool pred_bool = asBoolean(pred);
+  bool pred_bool = as_boolean(pred);
 
   ++num_branches_;
 

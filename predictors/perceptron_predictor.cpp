@@ -6,6 +6,7 @@
 namespace bp {
 
 namespace {
+  // Returns the sign of the given value.
   int sign(int val) {
     return (val > 0) - (val < 0);
   }
@@ -33,12 +34,14 @@ int PerceptronPredictor::ComputePerceptron(int key) const {
 
 void PerceptronPredictor::TrainPerceptron(int key, int y, int t) {
   if (sign(y) != t || abs(y) <= kTheta) {
-    if (abs(bias_[key] + t) < 1 << kWeightSize)
-      bias_[key] += t;
+    int ws = 1 << (kWeightSize - 1);
+    int b = bias_[key] + t;
+    if (abs(b) < ws)
+      bias_[key] = b;
     for (int i = 0; i < kHistorySize; ++i) {
       int h = getHistoryIndex(i);
       int w = weights_[key][i] + t * history_[h];
-      if (abs(w) < 1 << kWeightSize) {
+      if (abs(w) < ws) {
         weights_[key][i] = w;
       }
     }

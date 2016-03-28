@@ -25,13 +25,13 @@
 #include "predictors/perceptron_predictor.h"
 
 ostream *out = &cerr;
+// Contains all the predictors that should be used when instrumentating a
+// program with this Pin tool.
 vector<bp::Predictor*> bps =
   {new bp::TwoBitSaturatingCounterPredictor(), new bp::PerceptronPredictor()};
 
-int sign(int num) {
-  return (0 < num) - (num < 0);
-}
-
+// Runs the branch at the given address through each of the branch predictors
+// with whether the branch was taken and its instruction mnemonic.
 void ProcessBranch(ADDRINT pc, bool brTaken, void *arg) {
   string *mnemonic = reinterpret_cast<string *>(arg);
   for (bp::Predictor *bp : bps) {
@@ -39,16 +39,18 @@ void ProcessBranch(ADDRINT pc, bool brTaken, void *arg) {
   }
 }
 
+// Installs a call on conditional branches that then calls through to our
+// branch predictors.
 void InstrumentInstruction(INS ins, void *v) {
-  // Instrument conditional branches.
   if (INS_IsBranch(ins) && INS_HasFallThrough(ins)) {
     string *mnemonic = new string(INS_Mnemonic(ins));
-    /* *out << "Trying to instrument: " << mnemonic << ": 0x" << endl; */
     INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) ProcessBranch,
         IARG_INST_PTR, IARG_BRANCH_TAKEN, IARG_PTR, mnemonic, IARG_END);
   }
 }
 
+// Once the program has terminated, prints out all the branch predictor results
+// and statistics.
 void Finished(int code, void *v) {
   *out << endl << "Done! Results:" << endl << endl;
   for (bp::Predictor *bp : bps) {
@@ -64,11 +66,12 @@ int main(int argc, char *argv[]) {
   *out << "Running with the following branch predictor(s):" << endl;
   for (bp::Predictor *bp : bps) {
     *out << "  " << bp->get_name() << endl;
-    // delete bp;  // Due to the way Pin manages memory, this causes a crash.
+    // Due to the way Pin manages memory, we don't explicitly delete the branch
+    // predictors here. For this reason, we also do not use unique_ptr in our
+    // mnemonic map in PerceptronImpl.
   }
   *out << endl;
 
-  // Start the program.
   PIN_StartProgram();
 
   return 0;

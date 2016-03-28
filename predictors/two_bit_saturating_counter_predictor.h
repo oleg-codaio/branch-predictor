@@ -11,12 +11,15 @@
 
 namespace bp {
 
+// An enum representing the possible states that the FSM can be in.
 enum TwoBitState {STRONGLY_NOT_TAKEN, WEAKLY_NOT_TAKEN, WEAKLY_TAKEN,
     STRONGLY_TAKEN};
 
 class TwoBitSaturatingCounterPredictor : public PredictorImpl<TwoBitState> {
+  // The number of entries in this predictor.
   static const int kSize = 1024;
-  TwoBitState states[kSize];
+  // The array of all the states.
+  TwoBitState states_[kSize];
 
  public:
   TwoBitSaturatingCounterPredictor();
@@ -29,8 +32,8 @@ class TwoBitSaturatingCounterPredictor : public PredictorImpl<TwoBitState> {
  private:
   TwoBitState GetPrediction(int key) const override;
   void Update(int key, TwoBitState prediction, bool br_taken) override;
-  int getKey(ADDRINT pc) const override { return pc % kSize; };
-  bool asBoolean(TwoBitState t) const override {
+  int get_key(ADDRINT pc) const override { return pc % kSize; };
+  bool as_boolean(TwoBitState t) const override {
     return t == WEAKLY_TAKEN || t == STRONGLY_TAKEN;
   }
 };
