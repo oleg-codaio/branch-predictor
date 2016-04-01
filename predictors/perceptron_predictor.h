@@ -48,7 +48,7 @@ class PerceptronPredictor : public PredictorImpl<int> {
   // Returns true if the output y value is greater than 0.
   bool as_boolean(int t) const override { return t >= 0; };
   // Given an index in the GHR, returns the circular buffer index.
-  inline int getHistoryIndex(int i) const {
+  inline int get_history_index(int i) const {
     return (i + history_start_) % kHistorySize;
   }
   // Computes the y value of the perceptron with the given key.
