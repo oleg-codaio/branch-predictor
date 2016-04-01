@@ -26,7 +26,7 @@ void PerceptronPredictor::Update(int key, int prediction, bool br_taken) {
 int PerceptronPredictor::ComputePerceptron(int key) const {
   int y = bias_[key];
   for (int i = 0; i < kHistorySize; ++i) {
-    int h = getHistoryIndex(i);
+    int h = get_history_index(i);
     y += weights_[key][i] * history_[h];
   }
   return y;
@@ -40,7 +40,7 @@ void PerceptronPredictor::TrainPerceptron(int key, int y, int t) {
       bias_[key] = b;
     }
     for (int i = 0; i < kHistorySize; ++i) {
-      int h = getHistoryIndex(i);
+      int h = get_history_index(i);
       int w = weights_[key][i] + t * history_[h];
       if (abs(w) < ws) {
         weights_[key][i] = w;
@@ -49,6 +49,6 @@ void PerceptronPredictor::TrainPerceptron(int key, int y, int t) {
   }
 
   history_[history_start_] = t;
-  history_start_ = getHistoryIndex(1);
+  history_start_ = get_history_index(1);
 }
 };  // namespace bp
