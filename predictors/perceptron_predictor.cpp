@@ -36,8 +36,9 @@ void PerceptronPredictor::TrainPerceptron(int key, int y, int t) {
   if (sign(y) != t || abs(y) <= kTheta) {
     int ws = 1 << (kWeightSize - 1);
     int b = bias_[key] + t;
-    if (abs(b) < ws)
+    if (abs(b) < ws) {
       bias_[key] = b;
+    }
     for (int i = 0; i < kHistorySize; ++i) {
       int h = getHistoryIndex(i);
       int w = weights_[key][i] + t * history_[h];
